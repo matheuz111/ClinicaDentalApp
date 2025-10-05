@@ -3,12 +3,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.dental.app.clinicadentalapp.model;
+import com.dental.app.clinicadentalapp.dao.UsuarioDAO;
 
 public class Usuario {
     private int usuarioId;
     private String documentoIdentidad;
     private Rol rol;
-
+    
+    // Para almacenar el resultado de la validación del login
+    private UsuarioDAO.EstadoValidacion estadoValidacion;
+    
     // Getters y Setters
     public int getUsuarioId() {
         return usuarioId;
@@ -32,5 +36,13 @@ public class Usuario {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+    
+    public UsuarioDAO.EstadoValidacion getEstadoValidacion() {
+        return estadoValidacion;
+    }
+
+    public void setEstadoValidacion(UsuarioDAO.EstadoValidacion estadoValidacion) {
+        this.estadoValidacion = estadoValidacion;
     }
 }

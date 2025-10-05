@@ -1,7 +1,7 @@
-// Asegúrate de que el paquete sea .controller
 package com.dental.app.clinicadentalapp.controller;
 
-// Importamos nuestras clases y las de Jakarta EE (para Tomcat 10+)
+import com.dental.app.clinicadentalapp.dao.UsuarioDAO.EstadoValidacion;
+import static com.dental.app.clinicadentalapp.dao.UsuarioDAO.EstadoValidacion.*;
 import com.dental.app.clinicadentalapp.dao.UsuarioDAO;
 import com.dental.app.clinicadentalapp.model.Usuario;
 import java.io.IOException;
@@ -15,38 +15,48 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "LoginController", urlPatterns = {"/login"})
 public class LoginController extends HttpServlet {
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     * Este método se activa cuando el usuario envía el formulario de login.
-     */
     @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-    String docIdentidad = request.getParameter("documento_identidad");
-    String pass = request.getParameter("password");
+        String docIdentidad = request.getParameter("documento_identidad");
+        String pass = request.getParameter("password");
 
-    // --- Nuestros espías en el Controller ---
-    System.out.println("\n==============================================");
-    System.out.println("--- INICIO INTENTO DE LOGIN ---");
-    System.out.println("LoginController: Recibido documento -> " + docIdentidad);
-    System.out.println("LoginController: Recibida password -> " + pass);
-    // ------------------------------------
+        System.out.println("\n==============================================");
+        System.out.println("--- INICIO INTENTO DE LOGIN ---");
+        System.out.println("LoginController: Recibido documento -> " + docIdentidad);
+        System.out.println("LoginController: Recibida password -> " + pass);
 
-    UsuarioDAO usuarioDAO = new UsuarioDAO();
-    Usuario usuario = usuarioDAO.validarUsuario(docIdentidad, pass);
+        UsuarioDAO usuarioDAO = new UsuarioDAO();
+        Usuario usuario = new Usuario();
+        usuarioDAO.validarUsuario(docIdentidad, pass, usuario);
 
-    if (usuario != null) {
-        System.out.println("LoginController: El DAO devolvió un usuario. ¡LOGIN EXITOSO!");
-        HttpSession session = request.getSession();
-        session.setAttribute("usuario", usuario);
-        response.sendRedirect("dashboard.jsp");
-    } else {
-        System.out.println("LoginController: El DAO devolvió null. ¡LOGIN FALLIDO!");
-        request.setAttribute("mensajeError", "Documento o contraseña incorrectos.");
-        request.getRequestDispatcher("index.jsp").forward(request, response);
+        if (usuario.getEstadoValidacion() == UsuarioDAO.EstadoValidacion.LOGIN_EXITOSO) {
+            System.out.println("LoginController: El DAO devolvió un usuario. ¡LOGIN EXITOSO!");
+            HttpSession session = request.getSession();
+            session.setAttribute("usuario", usuario);
+            response.sendRedirect("dashboard.jsp");
+        } else {
+            String mensajeError = "";
+            switch (usuario.getEstadoValidacion()) {
+                case USUARIO_NO_ENCONTRADO:
+                    mensajeError = "Usuario no encontrado.";
+                    break;
+                case PASSWORD_INCORRECTO:
+                    mensajeError = "Contraseña incorrecta.";
+                    break;
+                case CUENTA_BLOQUEADA:
+                    mensajeError = "Usuario bloqueado, intente más tarde.";
+                    break;
+                default:
+                    mensajeError = "Documento o contraseña incorrectos.";
+                    break;
+            }
+            System.out.println("LoginController: ¡LOGIN FALLIDO! - " + mensajeError);
+            request.setAttribute("mensajeError", mensajeError);
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        }
+        System.out.println("--- FIN INTENTO DE LOGIN ---");
+        System.out.println("==============================================\n");
     }
-    System.out.println("--- FIN INTENTO DE LOGIN ---");
-    System.out.println("==============================================\n");
-}
 }

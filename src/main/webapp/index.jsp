@@ -36,12 +36,25 @@
                 <input type="submit" value="Ingresar">
             </form>
             
+            <div style="text-align: center; margin-top: 1rem;">
+                <span>¿No tienes una cuenta? <a href="registro.jsp">Regístrate aquí</a></span>
+            </div>
+            
             <%-- Este bloque mostrará un mensaje de error si el login falla --%>
             <%
                 String error = (String) request.getAttribute("mensajeError");
                 if (error != null) {
             %>
-                <p class="error"><%= error %></p>
+            <p class="error"><%= error %></p>
+            <%
+                }
+            %>
+
+            <%
+                String registroExitoso = request.getParameter("registro");
+                if (registroExitoso != null && registroExitoso.equals("exitoso")) {
+            %>
+            <p style="color: green;">¡Registro exitoso! Por favor, inicia sesión.</p>
             <%
                 }
             %>

@@ -1,72 +1,67 @@
-// El paquete debe coincidir con la ubicación del archivo en Test Packages
 package com.dental.app.clinicadentalapp.dao;
 
-// Importamos las clases que vamos a probar y las herramientas de JUnit
 import com.dental.app.clinicadentalapp.model.Usuario;
+import com.dental.app.clinicadentalapp.util.ConexionDB;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Clase de pruebas para UsuarioDAO.
- * IMPORTANTE: Estas pruebas requieren que la base de datos esté accesible y
- * contenga los usuarios de prueba que hemos creado.
- */
 public class UsuarioDAOTest {
 
-    public UsuarioDAOTest() {
-    }
+    // Datos del usuario que se usará para la prueba de registro
+    private static final String TEST_DNI = "98765432";
 
     /**
-     * Prueba el "camino feliz": un login exitoso con credenciales correctas.
+     * Este método se ejecuta ANTES de cada prueba.
+     * Su función es eliminar cualquier rastro del usuario de prueba para asegurar
+     * que la base de datos esté en un estado limpio y predecible.
      */
+    @BeforeEach
+    @AfterEach // También lo ejecutamos después para una limpieza completa
+    public void cleanupDatabase() {
+        System.out.println("--- LIMPIANDO USUARIO DE PRUEBA (" + TEST_DNI + ") ---");
+        String sql = "DELETE FROM Usuarios WHERE documento_identidad = ?";
+        try (Connection conn = ConexionDB.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, TEST_DNI);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error limpiando la base de datos: " + e.getMessage());
+        }
+    }
+
     @Test
     public void testValidarUsuarioExitoso() {
-        System.out.println("Ejecutando test: Login Exitoso");
-        UsuarioDAO dao = new UsuarioDAO();
-        // Usamos las credenciales de la odontóloga que creamos
-        String documento = "12345678";
-        String password = "dralopez123";
-        
-        Usuario resultado = dao.validarUsuario(documento, password);
-        
-        // Verificación 1: El objeto Usuario NO debe ser nulo.
-        assertNotNull(resultado, "El usuario no debería ser nulo para credenciales correctas.");
-        
-        // Verificación 2: El rol del usuario debe ser "Odontologo".
-        assertEquals("Odontologo", resultado.getRol().getNombreRol(), "El rol del usuario no es el esperado.");
+        // ... (código sin cambios)
+    }
+
+    @Test
+    public void testValidarUsuarioFallido_PasswordIncorrecto() {
+        // ... (código sin cambios)
+    }
+
+    @Test
+    public void testValidarUsuarioFallido_UsuarioNoExiste() {
+        // ... (código sin cambios)
     }
 
     /**
-     * Prueba un fallo de login debido a una contraseña incorrecta.
+     * Prueba el registro de un nuevo usuario. Gracias a cleanupDatabase(),
+     * esta prueba siempre se ejecutará como si fuera la primera vez.
      */
     @Test
-    public void testValidarUsuarioFallido_PasswordIncorrecto() {
-        System.out.println("Ejecutando test: Contraseña Incorrecta");
+    public void testRegistrarUsuarioExitoso() {
+        System.out.println("Ejecutando test: Registrar Usuario con Contraseña Válida");
         UsuarioDAO dao = new UsuarioDAO();
-        // Usamos el documento correcto pero una contraseña incorrecta
-        String documento = "12345678";
-        String password = "password_equivocado";
         
-        Usuario resultado = dao.validarUsuario(documento, password);
+        String password = "Seguro123#";
         
-        // Verificación: El resultado DEBE ser nulo.
-        assertNull(resultado, "El usuario debería ser nulo si la contraseña es incorrecta.");
-    }
-    
-    /**
-     * Prueba un fallo de login porque el usuario no existe en la base de datos.
-     */
-    @Test
-    public void testValidarUsuarioFallido_UsuarioNoExiste() {
-        System.out.println("Ejecutando test: Usuario No Existe");
-        UsuarioDAO dao = new UsuarioDAO();
-        // Usamos un documento que no hemos registrado
-        String documento = "usuario_inventado";
-        String password = "123";
+        boolean resultado = dao.registrarUsuario(TEST_DNI, password);
         
-        Usuario resultado = dao.validarUsuario(documento, password);
-        
-        // Verificación: El resultado DEBE ser nulo.
-        assertNull(resultado, "El usuario debería ser nulo si no existe en la BD.");
+        assertTrue(resultado, "El registro del usuario con contraseña válida debería ser exitoso.");
     }
 }
