@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+    display: flex;
+}
+
+.registro-page-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Columna Izquierda (Branding) --- */
+.branding-section {
+    flex: 1;
+    background-image: linear-gradient(rgba(42, 121, 238, 0.7), rgba(18, 59, 124, 0.8)), url('https://images.unsplash.com/photo-1629904850772-c34c676f14a4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+}
+
+.branding-logo i {
+    font-size: 6rem;
+    margin-bottom: 20px;
+}
+
+.branding-logo h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.branding-logo p {
+    font-size: 1.1rem;
+    margin-top: 10px;
+    font-weight: 300;
+    max-width: 400px;
+}
+
+/* --- Columna Derecha (Formulario) --- */
+.form-section-wrapper {
+    flex: 1;
+    background-color: #f4f6f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto; /* Para asegurar que se vea bien en pantallas pequeñas */
+}
+
+.registro-box {
+    width: 100%;
+    max-width: 700px;
+    background: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.registro-box h2 {
+    text-align: center;
+    color: #333;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #555;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #2A79EE;
+}
+
+.password-rules {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 5px;
+}
+
+input[type="submit"] {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 15px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #28a745;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.form-footer {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 15px;
+    font-size: 0.9rem;
+}
+
+.form-footer a {
+    color: #2A79EE;
+    text-decoration: none;
+}
+
+.login-link {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+}
+
+.login-link a {
+    color: #9c27b0;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.error-message {
+    grid-column: 1 / -1;
+    color: #d93025;
+    margin-top: 1rem;
+    font-weight: 500;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
