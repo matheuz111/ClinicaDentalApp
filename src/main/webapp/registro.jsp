@@ -94,7 +94,8 @@
                     <%-- Fila 5: DNI --%>
                     <div class="form-group full-width">
                         <label for="doc">Número de Documento (DNI) *</label>
-                        <input type="text" id="doc" name="documento_identidad" placeholder="Tu DNI de 8 dígitos" required maxlength="8" pattern="\\d{8}" title="El DNI debe tener 8 dígitos.">
+                        <%-- CORRECCIÓN: Se cambió pattern="\\d{8}" por pattern="\d{8}" --%>
+                        <input type="text" id="doc" name="documento_identidad" placeholder="Tu DNI de 8 dígitos" required maxlength="8" pattern="\d{8}" title="El DNI debe tener 8 dígitos.">
                     </div>
         
                     <%-- Fila 6: Contraseñas --%>

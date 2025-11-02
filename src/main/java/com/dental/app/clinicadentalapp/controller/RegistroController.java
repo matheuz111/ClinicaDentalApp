@@ -34,7 +34,8 @@ public class RegistroController extends HttpServlet {
         String direccion = request.getParameter("direccion");
 
         // --- Validaciones del lado del servidor ---
-        if (docIdentidad == null || docIdentidad.length() != 8 || !docIdentidad.matches("\\d+")) {
+        // CORRECCIÓN: Se mejoró la lógica de validación del DNI para ser más precisa.
+        if (docIdentidad == null || !docIdentidad.matches("\\d{8}")) {
             request.setAttribute("error", "El DNI debe tener 8 dígitos.");
             request.getRequestDispatcher("registro.jsp").forward(request, response);
             return;
